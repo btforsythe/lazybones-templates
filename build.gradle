@@ -13,7 +13,7 @@ buildscript {
 apply plugin: "uk.co.cacoethes.lazybones-templates"
 
 lazybones {
-    repositoryName = "<account>/<templates-repo>"
+    repositoryName = "btforsythe/lazybones-templates"
 
     // It's best to pull this information from a gradle.properties file in the
     // root directory. For example, gradle.properties could contain:
@@ -29,6 +29,6 @@ lazybones {
     // These properties are required for Bintray open source hosting. Uncomment
     // and substitute in your project's license and vcsUrl:
 
-    // licenses = ["Apache-2.0"]
-    // vcsUrl = "https://github.com/yourRepoName"
+    licenses = ["Apache-2.0"]
+    vcsUrl = "https://github.com/btforsythe"
 }

@@ -1,18 +1,12 @@
 import uk.co.cacoethes.util.NameType
 
-// def props = [
-// 	mainClassName: transformText(projectDir.simpleName, to: NameType.HYPHENATED, from: NameType.CAMEL_CASE)
-// ] 
-
-// processTemplates "build.gradle", props
-
-def projectFolderHyphenated = projectDir.name.contains('-')?
+def projectNameHyphenated = projectDir.name.contains('-')?
 	projectDir.name:
 	"${transformText(projectDir.name, from: NameType.CAMEL_CASE, to: NameType.HYPHENATED)}"
 
-def mainClassName = "${transformText(projectFolderHyphenated, from: NameType.HYPHENATED, to: NameType.CAMEL_CASE)}App"
+def mainClassName = "${transformText(projectNameHyphenated, from: NameType.HYPHENATED, to: NameType.CAMEL_CASE)}App"
 
-def mainClassSource = """package org.wecancodeit.${projectFolderHyphenated};
+def mainClassSource = """package ${lazybonesRootPackage}.${projectNameHyphenated};
 
 public class ${mainClassName} {
 
@@ -23,9 +17,11 @@ public class ${mainClassName} {
 }
 """
 
-// TODO should read package from external, too (System property? or use group id)
-new File(projectDir, "src/main/java/org/wecancodeit/${projectFolderHyphenated}").mkdir()
-new File(projectDir, "src/main/java/org/wecancodeit/${projectFolderHyphenated}/${mainClassName}.java") << mainClassSource
+// lazybonesRootPackage should be defined externally
+def rootPackageFolder = lazybonesRootPackage.replaceAll(".", "/")
+def projectFolder = "src/main/java/${rootPackageFolder}/${projectNameHyphenated}"
+new File(projectDir, projectFolder).mkdir()
+new File(projectDir, "${projectFolder}/${mainClassName}.java") << mainClassSource
 
 new File(projectDir, ".gitignore") << '''
 # lazybones

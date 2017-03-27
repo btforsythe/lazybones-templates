@@ -1,12 +1,25 @@
 import uk.co.cacoethes.util.NameType
 
-def projectNameHyphenated = projectDir.name.contains('-')?
-	projectDir.name:
-	"${transformText(projectDir.name, from: NameType.CAMEL_CASE, to: NameType.HYPHENATED)}"
+def projectName = new Object() {
+	def hyphenated = {
+		projectDir.name.contains('-')?
+		projectDir.name:
+		transformText(projectDir.name, from: NameType.PROPERTY, to: NameType.HYPHENATED)
+	};
 
-def mainClassName = "${transformText(projectNameHyphenated, from: NameType.HYPHENATED, to: NameType.CAMEL_CASE)}App"
+	def camelCase = {
+		transformText(hyphenated(), from: NameType.HYPHENATED, to: NameType.CAMEL_CASE)
+	};
 
-def mainClassSource = """package ${lazybonesRootPackage}.${projectNameHyphenated};
+	def asPackageName = {
+		transformText(hyphenated(), from: NameType.HYPHENATED, to: NameType.PROPERTY)
+	};
+}
+
+def mainClassName = "${projectName.camelCase()}App"
+
+def mainClassSource = """\
+package ${lazybonesRootPackage}.${projectName.asPackageName()};
 
 public class ${mainClassName} {
 
@@ -18,10 +31,13 @@ public class ${mainClassName} {
 """
 
 // lazybonesRootPackage should be defined externally
-def rootPackageFolder = lazybonesRootPackage.replaceAll(".", "/")
-def projectFolder = "src/main/java/${rootPackageFolder}/${projectNameHyphenated}"
-new File(projectDir, projectFolder).mkdir()
-new File(projectDir, "${projectFolder}/${mainClassName}.java") << mainClassSource
+def rootPackageFolder = lazybonesRootPackage.replaceAll(/\./, "/")
+def projectPackageFolder = "src/main/java/${rootPackageFolder}/${projectName.asPackageName()}"
+new File(projectDir, projectPackageFolder).mkdir()
+
+def javaAppClassFileName = "${projectPackageFolder}/${mainClassName}.java"
+new File(projectDir, javaAppClassFileName) << mainClassSource
+println "Java application class file is ${projectPackageFolder}/${mainClassName}.java"
 
 new File(projectDir, ".gitignore") << '''
 # lazybones
@@ -37,3 +53,9 @@ bin/
 .gradle/
 build/
 '''
+
+processTemplates "README.md", [
+	projectDir: projectDir,
+	projectPackageFolder: projectPackageFolder,
+	mainClassName: mainClassName
+	]

@@ -33,7 +33,7 @@ public class ${mainClassName} {
 // lazybonesRootPackage should be defined externally
 def rootPackageFolder = lazybonesRootPackage.replaceAll(/\./, "/")
 def projectPackageFolder = "src/main/java/${rootPackageFolder}/${projectName.asPackageName()}"
-new File(projectDir, projectPackageFolder).mkdir()
+new File(projectDir, projectPackageFolder).mkdirs()
 
 def javaAppClassFileName = "${projectPackageFolder}/${mainClassName}.java"
 new File(projectDir, javaAppClassFileName) << mainClassSource

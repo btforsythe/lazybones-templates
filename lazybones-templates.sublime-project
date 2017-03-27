@@ -3,6 +3,9 @@
 	[
 		{
 			"path": "."
+		},
+		{
+			"path": "/home/brian/WCCI/lazybones-support"
 		}
 	]
 }

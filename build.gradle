@@ -16,12 +16,9 @@ lazybones {
     repositoryName = "btforsythe/lazybones-templates"
 
     // Assigning these in ~/.gradle/gradle.properties
-    // repositoryUsername = "your_bintray_username"
-    // repositoryApiKey = "your_bintray_api_key"
-
-    // These properties are required for Bintray open source hosting. Uncomment
-    // and substitute in your project's license and vcsUrl:
-
+    repositoryUsername = project.lazybonesRepositoryUsername
+    repositoryApiKey = project.lazybonesRepositoryApiKey
+    
     licenses = ["Apache-2.0"]
-    vcsUrl = "https://github.com/btforsythe"
+    vcsUrl = "https://github.com/btforsythe/lazybones-templates"
 }
